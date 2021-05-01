@@ -32,7 +32,6 @@ export class AudioList extends Component {
             default:
                 dim.width = 0;
                 dim.height = 0;
-                break;
         }
         dim.width = Dimensions.get('window').width;
         dim.height = 70;
@@ -49,12 +48,12 @@ export class AudioList extends Component {
         //pause if already playing
         if (soundObj.isLoaded && soundObj.isPlaying) {
             const status = await pause(playbackObj);
-            return updateState(this.context, {soundObj: status})
+            return updateState(this.context, {soundObj: status});
         }
 
         if (soundObj.isLoaded && !soundObj.isPlaying && currentAudio.id === audio.id) {
             const status = await resume(playbackObj);
-            return updateState(this.context, {soundObj: status})
+            return updateState(this.context, {soundObj: status});
         }
     }
 

@@ -69,17 +69,19 @@ export class AudioProvider extends Component {
     }
 
     updateState = (prevState, newState = {}) => {
-        this.setState({ ...prevState, ...newState })
+        this.setState({ ...prevState, ...newState });
     }
     render() {
-        const { audioFiles, dataProvider, permissionError, playbackObj, soundObj, currentAudio } = this.state
+        const { audioFiles, dataProvider, permissionError, playbackObj, soundObj, currentAudio } = this.state;
         if (permissionError) return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ fontSize: 25, textAlign: 'center', color: 'red' }}>It looks like you havent accepted the permission</Text>
             </View>)
-        return <AudioContext.Provider value={{ audioFiles, dataProvider, playbackObj, soundObj, currentAudio, updateState: this.updateState, }}>
-            {this.props.children}
-        </AudioContext.Provider>
+        return (
+            <AudioContext.Provider value={{ audioFiles, dataProvider, playbackObj, soundObj, currentAudio, updateState: this.updateState }}>
+                {this.props.children}
+            </AudioContext.Provider>
+        );
     }
 }
 
