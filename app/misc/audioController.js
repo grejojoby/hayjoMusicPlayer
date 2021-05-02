@@ -22,3 +22,13 @@ export const resume = async playbackObj => {
         console.log('error in pause helper method', error.message);
     }
 }
+
+export const playNext = async (playbackObj, uri) => {
+    try {
+        await playbackObj.stopAsync();
+        await playbackObj.unloadAsync();
+        return await play(playbackObj, uri);
+    } catch (error) {
+        console.log('error in play next helper method', error.message);
+    }
+}
