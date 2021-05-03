@@ -11,7 +11,7 @@ const PlayerButton = (props) => {
         size = 40,
         iconColor = color.FONT,
         onPress,
-    }
+    } = props;
 
     const getIconName = (type) => {
         switch (type) {
