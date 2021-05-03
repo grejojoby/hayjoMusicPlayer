@@ -37,6 +37,26 @@ export class AudioList extends Component {
         dim.height = 70;
     })
 
+    setOnPlaybackStatusUpdate = async playbackStatus => {
+        if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
+            this.context.updateState(this.context, {
+                playbackPostition: playbackStatus.positionMillis,
+                playbackDuration: playbackStatus.durationMillis,
+            })
+        }
+
+        if (playbackStatus.didJustFinish) {
+            const nextAudioIndex = this.context.currentAudioIndex + 1;
+            if (nextAudioIndex >= this.context.totalAudioCount) {
+                this.context.playbackObj.unloadAsync();
+                return this.context.updateState(this.context, { soundObj: null, currentAudio: this.context.audioFiles[0], isPlaying: false, currentAudioIndex: 0, playbackPostition: null, playbackDuration: null })
+            }
+            const audio = this.context.audioFiles[nextAudioIndex];
+            const status = await playNext(this.context.playbackObj, audio.uri);
+            this.context.updateState(this.context, { soundObj: status, currentAudio: audio, isPlaying: true, currentAudioIndex: nextAudioIndex })
+        }
+    };
+
     handleAudioPress = async audio => {
         const { soundObj, playbackObj, currentAudio, updateState, audioFiles } = this.context;
         ///Playing audio for first time
@@ -44,7 +64,8 @@ export class AudioList extends Component {
             const playbackObj = new Audio.Sound();
             const status = await play(playbackObj, audio.uri);
             const index = audioFiles.indexOf(audio);
-            return updateState(this.context, { currentAudio: audio, playbackObj: playbackObj, soundObj: status, isPlaying: true, currentAudioIndex: index });
+            updateState(this.context, { currentAudio: audio, playbackObj: playbackObj, soundObj: status, isPlaying: true, currentAudioIndex: index });
+            return playbackObj.setOnPlaybackStatusUpdate(this.setOnPlaybackStatusUpdate);
         }
         //pause if already playing
         if (soundObj.isLoaded && soundObj.isPlaying && currentAudio.id === audio.id) {
