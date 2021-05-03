@@ -3,6 +3,9 @@ import { Text, View, Alert, Button } from 'react-native'
 import * as MediaLibrary from 'expo-media-library';
 import { DataProvider } from 'recyclerlistview';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Audio } from 'expo-av';
+import { playNext, pause, play, resume } from '../misc/audioController';
+
 
 export const AudioContext = createContext()
 
@@ -91,8 +94,33 @@ export class AudioProvider extends Component {
         }
     }
 
+    setOnPlaybackStatusUpdate = async playbackStatus => {
+        if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
+            this.updateState(this, {
+                playbackPostition: playbackStatus.positionMillis,
+                playbackDuration: playbackStatus.durationMillis,
+            })
+        }
+
+        if (playbackStatus.didJustFinish) {
+            const nextAudioIndex = this.state.currentAudioIndex + 1;
+            if (nextAudioIndex >= this.totalAudioCount) {
+                this.state.playbackObj.unloadAsync();
+                this.updateState(this, { soundObj: null, currentAudio: this.state.audioFiles[0], isPlaying: false, currentAudioIndex: 0, playbackPostition: null, playbackDuration: null })
+                return await storeAudioForNextOpening(this.state.audioFiles[0], 0);
+            }
+            const audio = this.state.audioFiles[nextAudioIndex];
+            const status = await playNext(this.state.playbackObj, audio.uri);
+            this.updateState(this, { soundObj: status, currentAudio: audio, isPlaying: true, currentAudioIndex: nextAudioIndex });
+            await storeAudioForNextOpening(audio, nextAudioIndex);
+        }
+    };
+
     componentDidMount() {
-        this.getPermission()
+        this.getPermission();
+        if (this.state.playbackObj === null) {
+            this.setState({ ...this.state, playbackObj: new Audio.Sound() });
+        }
     }
 
     updateState = (prevState, newState = {}) => {
@@ -119,6 +147,7 @@ export class AudioProvider extends Component {
                     totalAudioCount: this.totalAudioCount,
                     updateState: this.updateState,
                     loadPreviousAudio: this.loadPreviousAudio,
+                    OnPlaybackStatusUpdate: this.OnPlaybackStatusUpdate,
                 }}>
                 {this.props.children}
             </AudioContext.Provider>
