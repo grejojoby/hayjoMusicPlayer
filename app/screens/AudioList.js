@@ -68,7 +68,7 @@ export class AudioList extends Component {
             const status = await play(playbackObj, audio.uri);
             const index = audioFiles.indexOf(audio);
             updateState(this.context, { currentAudio: audio, playbackObj: playbackObj, soundObj: status, isPlaying: true, currentAudioIndex: index });
-            playbackObj.setOnPlaybackStatusUpdate(this.context.setOnPlaybackStatusUpdate);
+            playbackObj.setOnPlaybackStatusUpdate(this.context.OnPlaybackStatusUpdate);
             return storeAudioForNextOpening(audio, index);
         }
         //pause if already playing
