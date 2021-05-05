@@ -108,7 +108,12 @@ export class AudioList extends Component {
                 return (
                     <Screen>
                         <RecyclerListView dataProvider={dataProvider} layoutProvider={this.layoutProvider} rowRenderer={this.rowRenderer} extendedState={{ isPlaying }} />
-                        <OptionsModal onPlayPress={() => console.log("Play")} onPlaylistPress={() => console.log("Playlist")} currentItem={this.currentItem} visible={this.state.optionModalVisible} onClose={() => this.setState({ ...this.state, optionModalVisible: false })} />
+                        <OptionsModal onPlayPress={() => console.log("Play")} onPlaylistPress={() => {
+                            this.context.updateState(this.context, {
+                                addToPlayList: this.currentItem
+                            })
+                            this.props.navigation.navigate('Playlist');
+                        }} currentItem={this.currentItem} visible={this.state.optionModalVisible} onClose={() => this.setState({ ...this.state, optionModalVisible: false })} />
                     </Screen>
                 )
             }}

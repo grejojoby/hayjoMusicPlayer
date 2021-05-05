@@ -14,6 +14,8 @@ export class AudioProvider extends Component {
         super(props);
         this.state = {
             audioFiles: [],
+            playList: [],
+            addToPlayList: null,
             permissionError: false,
             dataProvider: new DataProvider((r1, r2) => r1 !== r2),
             playbackObj: null,
@@ -127,7 +129,7 @@ export class AudioProvider extends Component {
         this.setState({ ...prevState, ...newState });
     }
     render() {
-        const { audioFiles, dataProvider, permissionError, playbackObj, soundObj, currentAudio, isPlaying, currentAudioIndex, playbackDuration, playbackPosition } = this.state;
+        const { audioFiles, playList, addToPlayList, dataProvider, permissionError, playbackObj, soundObj, currentAudio, isPlaying, currentAudioIndex, playbackDuration, playbackPosition } = this.state;
         if (permissionError) return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ fontSize: 25, textAlign: 'center', color: 'red' }}>It looks like you havent accepted the permission</Text>
@@ -136,6 +138,8 @@ export class AudioProvider extends Component {
             <AudioContext.Provider
                 value={{
                     audioFiles,
+                    playList,
+                    addToPlayList,
                     dataProvider,
                     playbackObj,
                     soundObj,
