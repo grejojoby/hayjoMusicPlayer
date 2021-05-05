@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "hayjoMusicPlayer",
-    "slug": "hayjoMusicPlayer",
+    "name": "Jo Music Player",
+    "slug": "jo-music-player",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -24,7 +24,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.grejojoby.hayjoMusicPlayer"
+      "package": "com.grejojoby.jomusicplayer"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -9,8 +9,8 @@ const MyTheme = {
   colors: {
     ...DefaultTheme.colors,
     background: color.APP_BG,
-  }
-}
+  },
+};
 
 export default function App() {
   return (
@@ -19,7 +19,5 @@ export default function App() {
         <AppNavigator />
       </NavigationContainer>
     </AudioProvider>
-   
   );
 }
-
